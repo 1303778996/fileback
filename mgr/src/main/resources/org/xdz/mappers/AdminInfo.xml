@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xdz.mapper.AdminInfoMapper">
+    <select id="selByName" resultType="org.xdz.pojo.AdminInfo">
+        select *
+        from admin_info
+        where admin_name = #{name}
+    </select>
+    <sql id="con">
+        <where>
+            <if test="adminName!=null and !adminName.equals('')">
+                and admin_name=#{adminName}
+            </if>
+            <if test="adminState!=-1">
+                and admin_state=#{adminState}
+            </if>
+            <if test="roleId!=-1">
+                and a.role_id= #{roleId}
+            </if>
+        </where>
+    </sql>
+    <select id="selectAll" resultType="org.xdz.pojo.AdminInfo">
+        select a.*,ri.role_name from admin_info a left join role_info ri on a.role_id = ri.role_id
+        <include refid="con"></include>
+        limit #{off},#{lim}
+    </select>
+    <select id="count" resultType="int">
+        select count(*) from admin_info a left join role_info ri on a.role_id = ri.role_id
+        <include refid="con"></include>
+    </select>
+    <insert id="insert" parameterType="org.xdz.qo.AdminQo">
+        insert into admin_info (admin_name, admin_pwd)
+        values (#{adminName}, #{adminPwd})
+    </insert>
+    <update id="updateState">
+        update admin_info
+        set admin_state=0
+        where admin_id = #{id}
+    </update>
+    <update id="upPwd">
+        update admin_info
+        set admin_pwd=123456
+        where admin_id = #{id}
+    </update>
+    <update id="change" parameterType="org.xdz.qo.AdminQo">
+        update admin_info
+        <set>
+            <if test="adminName!=null and adminName.equals('')">
+                and admin_name=#{adminName}
+            </if>
+            <if test="adminPwd!=null and adminPwd.equals('')">
+                and admin_pwd=#{adminPwd}
+            </if>
+            <if test="roleId>0">
+                and role_id=#{roleId}
+            </if>
+        </set>
+    </update>
+</mapper>

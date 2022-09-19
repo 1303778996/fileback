@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xdz.mapper.MenuinfoMapper">
+
+   <select id="select" resultType="org.xdz.pojo.MenuInfo">
+       select menu_info.* from menu_info
+       inner join role_menu_info rmr on menu_info.menu_id = rmr.menu_id
+       where rmr.role_id =  #{id}
+   </select>
+
+</mapper>
